@@ -9,8 +9,8 @@ function onFile() {
     console.log('upload code goes here', file, file.name);
     $('#box').removeClass("area").addClass("preview");
     readURL(upload);
-    resetButton.show();
-    confirmButton.show();
+    resetButton.fadeIn();
+    confirmButton.fadeIn();
 }
 
 upload.addEventListener('dragenter', function (e) {
@@ -45,8 +45,8 @@ resetButton.click(() => {
     $('#box').css('background-image', `url("/public/assets/img/placeholder.png")`);
     $('#box').removeClass("preview").addClass("area");
     upload.value = "";
-    resetButton.hide();
-    confirmButton.hide();
+    resetButton.fadeOut();
+    confirmButton.fadeOut();
 });
 
 confirmButton.click(() => {
