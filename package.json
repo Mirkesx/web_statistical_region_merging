@@ -1,0 +1,30 @@
+{
+  "name": "web_statistical_region_merging",
+  "version": "1.0.0",
+  "description": "Implementation of Statistical Region Mergin Algorithms",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mirkesx/web_statistical_region_merging.git"
+  },
+  "keywords": [
+    "region",
+    "merging"
+  ],
+  "author": "Marco Cavalli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mirkesx/web_statistical_region_merging/issues"
+  },
+  "homepage": "https://github.com/Mirkesx/web_statistical_region_merging#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "socket.io": "^3.1.1",
+    "underscore": "^1.12.0"
+  }
+}
