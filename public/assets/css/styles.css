@@ -173,7 +173,7 @@ body {
     width: 512px !important;
     height: 512px !important;
     background-color: white;
-    border: 4px solid #000;
+    border: 1px solid #000;
 }
 
 #carousel-inner img {
