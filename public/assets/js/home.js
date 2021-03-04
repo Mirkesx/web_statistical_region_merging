@@ -7,11 +7,11 @@ var resetSRMButton = $("#reset-srm");
 var baseUrl = `${location.protocol}//${location.host}`;
 
 $('.toast-success').toast({
-    'delay': 2000
+    'delay': 3000
 });
 
 $('.toast-danger').toast({
-    'delay': 2000
+    'delay': 3000
 });
 
 $('#valueQ').on('change', () => {
@@ -52,15 +52,25 @@ $('#kernel2').on('input', () => {
     $('#kernel2').val(next_val);
 });
 
+function isASupportedFile(filename) {
+    var splitted = filename.split(".");
+    var type = splitted[splitted.length - 1];
+    return ['jpg','jpeg','png','gif','tiff','tif'].includes(type);
+}
+
 function onFile() {
-    var me = this,
-        file = upload.files[0],
-        name = file.name.replace(/.[^/.]+$/, '');
-    console.log('upload code goes here', file, file.name);
-    $('#box').removeClass("area").addClass("preview");
-    readURL(upload);
-    resetButton.fadeIn();
-    confirmButton.fadeIn();
+    var file = upload.files[0];
+    //console.log('upload code goes here', file, file.name);
+    if(isASupportedFile(file.name)) {
+        $('#box').removeClass("area").addClass("preview");
+        readURL(upload);
+        resetButton.fadeIn();
+        confirmButton.fadeIn();
+    } else {
+        $('#toast-error').html('The file is not supported!');
+        $('.toast-danger').toast('show');
+        reset();
+    }
 }
 
 upload.addEventListener('dragenter', function (e) {
@@ -116,7 +126,6 @@ resetSRMButton.click(() => {
 })
 
 confirmButton.click(() => {
-    //alert("File uploaded!");
 
     var data = new FormData();
     $.each($('#upload')[0].files, function (i, file) {
@@ -207,6 +216,7 @@ confirmSRMButton.click(() => {
             $('#segBordersSRM').val(data.data.seg_borders);
             $('#toast-success').html(data.success);
             $('.toast-success').toast('show');
+            setUploadImage(data.data.original);
             //setSRMImage(`public/uploads/${data.data.seg_borders}`);
             setCarousel([data.data.segmented, data.data.borders, data.data.seg_borders]);
         },

@@ -196,3 +196,12 @@ body {
 #about-body {
     display: none;
 }
+
+.notification {
+    position: fixed; 
+    right: 20px; 
+    top: 70px;
+    min-width: 600px; 
+    min-height: 400px; 
+    z-index: 9999;
+}
