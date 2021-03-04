@@ -127,7 +127,7 @@ def apply_borders(im1, im2, color="#00ffff"):
     w = im1.shape[0]
     h = im1.shape[1]
     r, g, b = hex2rgb(color)
-    print(r,g,b)
+    # print(r,g,b)
     im3 = im1.copy()
     for i in range(w):
         for j in range(h):
