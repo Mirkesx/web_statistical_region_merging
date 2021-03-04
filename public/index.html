@@ -23,9 +23,11 @@
             </button>
             <div class="collapse navbar-collapse" id="Navbar">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active" id="home-li"><a id="home-link" class="nav-link" href="#"><span class="fa fa-home"></span> Home</a>
+                    <li class="nav-item active" id="home-li"><a id="home-link" class="nav-link" href="#"><span
+                                class="fa fa-home"></span> Home</a>
                     </li>
-                    <li class="nav-item" id="about-li"><a id="about-link" class="nav-link" href="#"><span class="fa fa-info"></span>
+                    <li class="nav-item" id="about-li"><a id="about-link" class="nav-link" href="#"><span
+                                class="fa fa-info"></span>
                             About</a></li>
                 </ul>
             </div>
@@ -37,8 +39,6 @@
             <div class="row row-header">
                 <div class="col-12 col-sm-12">
                     <h1 class="text-center">Statistical Region Merging</h1>
-                    <p class="text-center">Upload a pic. The algorithm will generate a second pic where you can see
-                        regions highlighted!</p>
                 </div>
             </div>
         </div>
@@ -80,10 +80,10 @@
 
         <div class="row" id="home-body">
             <div class="col-12 my-3">
-                <div class="card text-center">
+                <div class="card">
                     <div class="card-header bg-color text-white">
                         <p class="card-text">
-                        <h4>Upload</h4>
+                        <h4></h4>
                         </p>
                     </div>
                     <div class="card-body">
@@ -163,15 +163,84 @@
 
         <div class="row" id="about-body">
             <div class="col-12 my-3">
-                <div class="card text-center">
+                <div class="card">
                     <div class="card-header bg-color text-white">
                         <p class="card-text">
-                        <h4>About</h4>
+                        <h4></h4>
                         </p>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            
+                        <div class="row p-4">
+                            <h4>The algorithm</h4>
+                            <p class="text-justify">Statistical region merging (SRM) is an algorithm used for image
+                                segmentation.
+                                The algorithm is used to evaluate the values within a regional span and grouped together
+                                based on the merging criteria,
+                                resulting in a smaller list. Some useful examples are creating a group of generations
+                                within a population, or in image processing,
+                                grouping a number of neighboring pixels based on their shades that fall within a
+                                particular threshold (Qualification Criteria).</p>
+                            <h4>How to use the app</h4>
+
+                            <p class="text-justify">
+                                To use the app you first upload an image on the left square clicking on it and then
+                                browsing the file or just by drag-and-drop the file
+                                inside the square.
+                                You can upload any image file (png, jpg, tiff, gif). This software supports both colored
+                                and grayscaled images.
+                                Right now tiff image can't be displayed, but they will work with no fail.
+                                Once you put a file in the square, you have to confirm the upload by pressing the
+                                "Confirm" button.
+                                If you click the "Confirm" button, you will see a notification on the top-right corner
+                                of the screen telling you if the upload was successful or if it failed.
+                            </p>
+
+                            <p class="text-justify">
+                                When the image has been successfully uploaded you will see few input controls. They will
+                                allow you to:
+                            </p>
+
+                            <p class="text-left">
+                                <ul>
+                                    <li>Set the Q value</li>
+                                    <li>Set the displayed color for borders of regions</li>
+                                    <li>Set the size of both the kernels used to create the borders</li>
+                                </ul>
+                            </p>
+
+                            <p class="text-justify">
+                                Once you have decided which configuration to run you must press "Run SRM" to proceed.
+                            </p>
+
+                            <p class="text-justify">
+                                You will now see a loading spinner telling you that the system is processing your
+                                request. It can take from few seconds to few minutes
+                                to complete. It depends on the resolution of the image you have uploaded.
+                            </p>
+
+                            <p class="text-justify">
+                                When the algorithm will stop, you will see the results on the right square. Here you can
+                                display three images:
+                            </p>
+
+                            <p class="text-left">
+                                <ul>
+                                    <li>The image segmented</li>
+                                    <li>The image with the borders of each region</li>
+                                    <li>The original image and the borders of each region combined</li>
+                                </ul>
+                            </p>
+
+                            <p class="text-justify">
+                                You can move from one image to another one either using the arrows keys (left and right)
+                                or clicking on the rectangular indicators you can see
+                                at the bottom of the image.
+                            </p>
+
+                            <p class="text-justify">
+                                Pressing "Reset" buttons will bring you to the main page, as if you would refresh the
+                                page.
+                            </p>
                         </div>
                     </div>
                 </div>

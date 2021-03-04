@@ -286,7 +286,8 @@ $("#home-link").on('click', function () {
     if(!$('home-li').hasClass('active')) {
         $('#home-li').addClass('active');
         $('#about-li').removeClass('active');
-        $('#home-body').fadeIn();
-        $('#about-body').fadeOut();
+        $('#about-body').fadeOut('slow', function() {
+            $('#home-body').fadeIn();
+        });
     }
 });

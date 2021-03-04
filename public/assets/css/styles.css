@@ -180,7 +180,7 @@ body {
     display: block;
     width: 512px; 
     height: 512px;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .carousel-control-prev .carousel-control-next {
@@ -191,4 +191,8 @@ body {
 
 .carousel-indicators li {
     background-color: #444;
+}
+
+#about-body {
+    display: none;
 }
