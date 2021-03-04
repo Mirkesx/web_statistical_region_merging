@@ -55,7 +55,7 @@ $('#kernel2').on('input', () => {
 function isASupportedFile(filename) {
     var splitted = filename.split(".");
     var type = splitted[splitted.length - 1];
-    return ['jpg','jpeg','png','gif','tiff','tif'].includes(type);
+    return ['jpg','jpeg','png','tiff','tif'].includes(type);
 }
 
 function onFile() {
