@@ -115,6 +115,7 @@ function reset() {
     confirmButton.fadeOut();
     cleanInputs();
     resetCarousel()
+    $('#upload').prop('disabled', false);
 }
 
 resetButton.click(() => {
@@ -126,6 +127,7 @@ resetSRMButton.click(() => {
 })
 
 confirmButton.click(() => {
+    $('#upload').prop('disabled', true);
 
     var data = new FormData();
     $.each($('#upload')[0].files, function (i, file) {
@@ -155,7 +157,7 @@ confirmButton.click(() => {
             var error = JSON.parse(error);
             $('#toast-error').html('Upload failed!');
             $('.toast-danger').toast('show');
-            $('#fileName').val("");
+            reset();
         }
     });
 });
@@ -195,7 +197,8 @@ confirmSRMButton.click(() => {
         qvalue: $('#valueQ').val(),
         k1: $('#kernel1').val(),
         k2: $('#kernel2').val(),
-        color: $('#colorBorder').val()
+        color: $('#colorBorder').val(),
+        max_regions: $('#regions').val()
     };
 
     $.ajax({

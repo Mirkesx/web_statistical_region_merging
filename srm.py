@@ -11,13 +11,15 @@ class srm:
         self.parent=None
         self.shape=None
         self.Q = None
+        self.G = None
         # probality that a region can be merged 
         self.delta = None
         self.size=None
-        self.min_size = None
+        #self.min_size = None
+        self.max_regions = None
         
 
-    def execute(self, image , Q=32 ):
+    def execute(self, image , Q=32, max_regions=15):
 
         self.shape = image.shape
         (h,w,c) = self.shape
@@ -26,9 +28,11 @@ class srm:
         self.parent = np.arange(self.size)
         self.rank = np.ones(self.size)
         self.Q=Q
+        self.G = 256
+        self.max_regions = max_regions if max_regions > 0 else self.size
+        print(self.max_regions)
         self.min_size = 0.001*self.size
         self.delta = math.log(6)+2*math.log(self.size)
-        # file=open("out.txt","w+")
 
         edge_list = self.get_sorted_edge_pair()
 
@@ -38,12 +42,14 @@ class srm:
             if parentA != parentB and self.predicate(parentA,parentB):
                 self.merge(parentA, parentB)
 
-        self.merge_small_region()
+        self.merge_occlusions()
+        self.merge_small_regions()
 
         for i in range(self.size):
             color = self.image[self.get_parent(i)]
             self.image[i]= color
 
+        #print(np.unique(self.rank))
         return self.image.reshape(self.shape[0],self.shape[1],-1)
 
     def get_sorted_edge_pair(self):
@@ -84,7 +90,7 @@ class srm:
 
 
     def get_predicate_value(self,ptA):
-        return (256.0**2/float(2*self.Q*self.rank[ptA]))*(min(256,self.rank[ptA])*math.log(self.rank[ptA]+1)+self.delta)
+        return (self.G**2/float(2*self.Q*self.rank[ptA]))*(min(self.G,self.rank[ptA])*math.log(self.rank[ptA]+1)+self.delta)
 
     def merge(self,ptA,ptB):
         s1 = self.rank[ptA]
@@ -107,12 +113,29 @@ class srm:
         self.parent[ptA] = p
         return p
 
-    def merge_small_region(self):
+    def merge_occlusions(self):
         for i in range(1,self.size):
             r1=self.get_parent(i)
             r2= self.get_parent(i-1)
             if r1 != r2 and self.rank[r1]+self.rank[r2] <= self.min_size:
                 self.merge(r1,r2)
+
+
+    def merge_small_regions(self):
+        max_parents = self.retrieve_max_parents()
+        if len(max_parents) > self.max_regions:
+            allowed_parents = max_parents[:self.max_regions]
+            for i in range(1,self.size):
+                r1 = self.get_parent(i)
+                r2 = self.get_parent(i-1)
+                if r1 != r2 and r1 not in allowed_parents:
+                    self.merge(r1,r2)
+
+    def retrieve_max_parents(self):
+        unique, counts = np.unique(self.parent, return_counts=True)
+        parents_counts = dict(zip(unique, counts))
+        return [k for k, v in sorted(parents_counts.items(), key=lambda item: item[1], reverse=True)]
+
 
 
 #METHODS FOR MORPHOLOGIC OPERATIONS
@@ -145,16 +168,13 @@ def find_borders(img, dim1=5, dim2=5):
     return dilation - erosion
 
 
-
-#filename = 'lenna.png'#'file_example_TIFF_1MB.tiff'
-#q = 32
-
 if __name__ == '__main__':
     filename = sys.argv[1]
     q = int(sys.argv[2])
     k1 = int(sys.argv[3])
     k2 = int(sys.argv[4])
     color = sys.argv[5]
+    max_regions = int(sys.argv[6])
     # print(filename)
     # print(q)
     # print(k1)
@@ -180,7 +200,7 @@ if __name__ == '__main__':
     cv2.imwrite(original_name, raw)
     algo = srm()
     #print(raw.shape)
-    segmented = algo.execute(raw,q)
+    segmented = algo.execute(raw,q,max_regions)
     #print(segmented.shape)
     print("Storing the segmented images")
     cv2.imwrite(segmented_name, segmented)

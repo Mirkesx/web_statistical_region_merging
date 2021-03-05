@@ -76,8 +76,9 @@ app.post('/performSRM', function (req, res) {
     var k1 = req.body.k1;
     var k2 = req.body.k2;
     var color = req.body.color;
+    var max_regions = req.body.max_regions;
 
-    const python = spawn('python', ['./srm.py', filename, q, k1, k2, color]);
+    const python = spawn('python', ['./srm.py', filename, q, k1, k2, color, max_regions]);
 
     var largeDataSet = [];
     python.stdout.on('data', function (data) {

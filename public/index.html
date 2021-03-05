@@ -88,7 +88,7 @@
                         <div class="row">
                             <div class="col-12 col-md d-flex justify-content-center mt-1">
                                 <div class="area" id="box">
-                                    <input type="file" id="upload"/>
+                                    <input type="file" id="upload" />
                                 </div>
                             </div>
                             <div class="col-12 col-md d-flex justify-content-center mt-1">
@@ -120,15 +120,20 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="inputGroup-sizing-sm">Q Value:</span>
                                     </div>
-                                    <input type="text" class="form-control" id="valueRange" readonly value="10"
+                                    <input type="text" class="form-control" id="valueRange" readonly value="32"
                                         aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                                    <input type="range" class="form-control ml-2" id="valueQ" min="0" max="50" step="1"
-                                        value=10 min="3" max="7" step="2" value="3" aria-label="Small"
-                                        aria-describedby="inputGroup-sizing-sm">
+                                    <input type="range" class=" ml-2" id="valueQ" min="0" max="64" step="1"
+                                        value=32 aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                                     <div class="input-group-prepend ml-2">
-                                        <span class="input-group-text" id="inputGroup-sizing-sm">Color of the borders:</span>
+                                        <span class="input-group-text" id="inputGroup-sizing-sm">Max number of regions:</span>
                                     </div>
-                                    <input type="color" class="form-control" id="colorBorder" value="#00ffff"
+                                    <input type="number" class="form-control" id="regions" min="0" step="1" value="15" 
+                                        aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                    <div class="input-group-prepend ml-2">
+                                        <span class="input-group-text" id="inputGroup-sizing-sm">Color of the
+                                            borders:</span>
+                                    </div>
+                                    <input type="color" class="form-control" id="colorBorder" value="#ffffff"
                                         aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
@@ -143,7 +148,7 @@
                                     <input type="number" class="form-control" min="3" max="7" step="2" value="3"
                                         aria-label="Small" aria-describedby="inputGroup-sizing-sm" id="kernel2">
                                 </div>
-                                <div class="mt-3">
+                                <div class="mt-3 text-center">
                                     <input class="btn btn-color mr-1" id="confirm-srm" value="Run SRM" />
                                     <input class="btn btn-color ml-1" id="reset-srm" value="Reset" />
                                 </div>
@@ -199,11 +204,11 @@
                             </p>
 
                             <p class="text-left">
-                                <ul>
-                                    <li>Set the Q value</li>
-                                    <li>Set the displayed color for borders of regions</li>
-                                    <li>Set the size of both the kernels used to create the borders</li>
-                                </ul>
+                            <ul>
+                                <li>Set the Q value</li>
+                                <li>Set the displayed color for borders of regions</li>
+                                <li>Set the size of both the kernels used to create the borders</li>
+                            </ul>
                             </p>
 
                             <p class="text-justify">
@@ -222,11 +227,11 @@
                             </p>
 
                             <p class="text-left">
-                                <ul>
-                                    <li>The image segmented</li>
-                                    <li>The image with the borders of each region</li>
-                                    <li>The original image and the borders of each region combined</li>
-                                </ul>
+                            <ul>
+                                <li>The image segmented</li>
+                                <li>The image with the borders of each region</li>
+                                <li>The original image and the borders of each region combined</li>
+                            </ul>
                             </p>
 
                             <p class="text-justify">
