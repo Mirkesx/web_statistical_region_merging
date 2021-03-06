@@ -199,7 +199,8 @@ confirmSRMButton.click(() => {
         k1: $('#kernel1').val(),
         k2: $('#kernel2').val(),
         color: $('#colorBorder').val(),
-        max_regions: $('#regions').val()
+        max_regions: $('#regions').val(),
+        min_size: $('#min_size').val()
     };
 
     $.ajax({
