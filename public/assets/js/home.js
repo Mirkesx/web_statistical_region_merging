@@ -146,6 +146,7 @@ confirmButton.click(() => {
             console.log(data);
             var data = JSON.parse(data);
             $('#fileName').val(data.file_name);
+            setUploadImage(`public/uploads/original_${data.file_name.split(".")[0]}.png`);
             $('#toast-success').html(data.success);
             $('.toast-success').toast('show');
             resetButton.fadeOut();
@@ -219,7 +220,7 @@ confirmSRMButton.click(() => {
             $('#segBordersSRM').val(data.data.seg_borders);
             $('#toast-success').html(data.success);
             $('.toast-success').toast('show');
-            setUploadImage(data.data.original);
+            //setUploadImage(data.data.original);
             //setSRMImage(`public/uploads/${data.data.seg_borders}`);
             setCarousel([data.data.segmented, data.data.borders, data.data.seg_borders]);
         },

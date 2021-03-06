@@ -86,7 +86,7 @@ class srm:
         predicate_A=self.get_predicate_value(ptA)
         predicate_B= self.get_predicate_value(ptB)
         comp = (self.image[ptA] - self.image[ptB] )**2
-        return (comp < (predicate_A+predicate_B)).all()
+        return (comp <= (predicate_A+predicate_B)).all()
 
 
     def get_predicate_value(self,ptA):

@@ -58,13 +58,43 @@ app.post('/upload', function (req, res) {
     });
 
     form.on('file', function (name, file) {
-        console.log('Uploaded ' + file.name);
-        obj = {
-            "success": "Upload Completed",
-            "status": 200,
-            "file_name": file.name
-        }
-        res.send(JSON.stringify(obj));
+
+        const python = spawn('python', ['./savefile.py', file.name]);
+
+        var largeDataSet = [];
+        python.stdout.on('data', function (data) {
+            console.log('Pipe data from python script ...');
+            largeDataSet.push(data);
+        });
+
+        python.stderr.on('data', function (data) {
+            console.log('Pipe error from python script ...');
+            largeDataSet.push(data);
+        });
+
+        // in close event we are sure that stream is from child process is closed
+        python.on('close', (code) => {
+            console.log(`child process close all stdio with code ${code}`);
+            // send data to browser
+            console.log(largeDataSet.join(""));
+
+            if (code == 0) {
+                console.log('Uploaded ' + file.name);
+                obj = {
+                    "success": "Upload Completed",
+                    "status": 200,
+                    "file_name": file.name
+                }
+                res.send(JSON.stringify(obj));
+            } else {
+                console.log("Upload Failed!");
+                var obj = {
+                    "error": "Upload Failed",
+                    "status": 500
+                }
+                res.send(JSON.stringify(obj));
+            }
+        });
     });
 });
 
