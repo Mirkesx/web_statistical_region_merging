@@ -19,7 +19,7 @@ class srm:
         self.max_regions = None
         
 
-    def execute(self, image , Q=32, max_regions=15):
+    def execute(self, image , Q=32, max_regions=15, min_size=0.001):
 
         self.shape = image.shape
         (h,w,c) = self.shape
@@ -31,7 +31,7 @@ class srm:
         self.G = 256
         self.max_regions = max_regions if max_regions > 0 else self.size
         print(self.max_regions)
-        self.min_size = 0.001*self.size
+        self.min_size = min_size*self.size
         self.delta = math.log(6)+2*math.log(self.size)
 
         edge_list = self.get_sorted_edge_pair()
@@ -175,11 +175,18 @@ if __name__ == '__main__':
     k2 = int(sys.argv[4])
     color = sys.argv[5]
     max_regions = int(sys.argv[6])
+    min_size = float(sys.argv[7])
     # print(filename)
     # print(q)
     # print(k1)
     # print(k2)
     # print(color)
+
+    if min_size > 1:
+        min_size = 1
+    elif min_size < 0:
+        min_size = 0.00001
+    print(min_size)
 
     original_name = "./public/uploads/original_{}.png".format(filename.split('.')[0])
     segmented_name = "./public/uploads/segmented_{}.png".format(filename.split('.')[0])
@@ -200,7 +207,7 @@ if __name__ == '__main__':
     cv2.imwrite(original_name, raw)
     algo = srm()
     #print(raw.shape)
-    segmented = algo.execute(raw,q,max_regions)
+    segmented = algo.execute(raw,q,max_regions,min_size)
     #print(segmented.shape)
     print("Storing the segmented images")
     cv2.imwrite(segmented_name, segmented)
