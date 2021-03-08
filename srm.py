@@ -15,26 +15,26 @@ class srm:
         # probality that a region can be merged 
         self.delta = None
         self.size=None
-        #self.min_size = None
+        self.min_size = None
         self.max_regions = None
         
 
-    def execute(self, image , Q=32, max_regions=15, min_size=0.001):
+    def run(self, image , Q=32, max_regions=15, min_size=0.001):
 
         self.shape = image.shape
         (h,w,c) = self.shape
-        self.size=w*h
+        self.size = w*h
         self.image = np.float32(image.reshape(self.size, -1))
         self.parent = np.arange(self.size)
         self.rank = np.ones(self.size)
-        self.Q=Q
+        self.Q = Q
         self.G = 256
         self.max_regions = max_regions if max_regions > 0 else self.size
-        print(self.max_regions)
+        #print(self.max_regions)
         self.min_size = min_size*self.size
         self.delta = math.log(6)+2*math.log(self.size)
 
-        edge_list = self.get_sorted_edge_pair()
+        edge_list = self.make_edge_pairs_list()
 
         for ptA , ptB in edge_list[0:]:
             parentA = self.get_parent(ptA)
@@ -42,68 +42,62 @@ class srm:
             if parentA != parentB and self.predicate(parentA,parentB):
                 self.merge(parentA, parentB)
 
-        self.merge_occlusions()
-        self.merge_small_regions()
+        if self.max_regions > 0:
+            self.merge_occlusions()
+
+        if self.min_size > 0:
+            self.merge_smaller_regions()
 
         for i in range(self.size):
             color = self.image[self.get_parent(i)]
             self.image[i]= color
 
         #print(np.unique(self.rank))
-        return self.image.reshape(self.shape[0],self.shape[1],-1)
+        return self.image.reshape(self.shape[0], self.shape[1], -1)
 
-    def get_sorted_edge_pair(self):
-        image = self.image
-        (h,w,d) = self.shape
-        pairs=[]
-        count=0
+    def make_edge_pairs_list(self):
+        (h,w,c) = self.shape
+        pairs = []
 
         for i in range(0,h):
             for j in range(0,w):
-
                 index = i*w+j 
                 if i != h-1:
                     pairs.append((index, index+w))
                 if j != w-1:
                     pairs.append((index, index+1))
 
-        return self.sort_edge_pair(pairs)
+        return self.sort_edge_pairs(pairs)
 
-    def sort_edge_pair(self,pairs):
+    def sort_edge_pairs(self,pairs):
         img = self.image
         # print(img.shape)
-        # humming difference 
-        # can also use manhataan difference
-        # can use mean function for difference 
         def diff(p):
             (r1, r2) = p
             diff = np.max(np.abs(img[r1] - img[r2]))
             return diff
         return sorted(pairs, key=diff)
 
+    def evaluate_predicate(self,ptA):
+        return (self.G**2/float(2*self.Q*self.rank[ptA]))*(min(self.G,self.rank[ptA])*math.log(self.rank[ptA]+1)+self.delta)
 
     def predicate(self,ptA, ptB):
-        predicate_A=self.get_predicate_value(ptA)
-        predicate_B= self.get_predicate_value(ptB)
+        predicate_A = self.evaluate_predicate(ptA)
+        predicate_B = self.evaluate_predicate(ptB)
         comp = (self.image[ptA] - self.image[ptB] )**2
         return (comp <= (predicate_A+predicate_B)).all()
-
-
-    def get_predicate_value(self,ptA):
-        return (self.G**2/float(2*self.Q*self.rank[ptA]))*(min(self.G,self.rank[ptA])*math.log(self.rank[ptA]+1)+self.delta)
 
     def merge(self,ptA,ptB):
         s1 = self.rank[ptA]
         s2 = self.rank[ptB]
-        color = (self.image[ptA]*s1 +self.image[ptB]*s2)/float(s1+s2)
+        color = (self.image[ptA]*s1+self.image[ptB]*s2)/float(s1+s2)
 
         if  s1 < s2:
-            ptA, ptB = ptB , ptA
+            ptA, ptB = ptB, ptA
 
-        self.parent[ptB]=ptA
-        self.rank[ptA]+=self.rank[ptB]
-        self.image[ptA]=color
-
+        self.parent[ptB] = ptA
+        self.rank[ptA] += self.rank[ptB]
+        self.image[ptA] = color
 
     def get_parent(self,ptA):
         if self.parent[ptA] == ptA:
@@ -115,21 +109,20 @@ class srm:
 
     def merge_occlusions(self):
         for i in range(1,self.size):
-            r1=self.get_parent(i)
-            r2= self.get_parent(i-1)
-            if r1 != r2 and self.rank[r1]+self.rank[r2] <= self.min_size:
-                self.merge(r1,r2)
+            r1 = self.get_parent(i)
+            r2 = self.get_parent(i-1)
+            if r1 != r2 and self.rank[r1] <= self.min_size:#+self.rank[r2] <= self.min_size:
+                self.merge(r1, r2)
 
-
-    def merge_small_regions(self):
+    def merge_smaller_regions(self):
         max_parents = self.retrieve_max_parents()
         if len(max_parents) > self.max_regions:
             allowed_parents = max_parents[:self.max_regions]
-            for i in range(1,self.size):
+            for i in range(1, self.size):
                 r1 = self.get_parent(i)
                 r2 = self.get_parent(i-1)
                 if r1 != r2 and r1 not in allowed_parents:
-                    self.merge(r1,r2)
+                    self.merge(r1, r2)
 
     def retrieve_max_parents(self):
         unique, counts = np.unique(self.parent, return_counts=True)
@@ -161,8 +154,8 @@ def apply_borders(im1, im2, color="#00ffff"):
     return im3
 
 def find_borders(img, dim1=5, dim2=5):
-    k1 = np.ones((dim1,dim1),np.uint8)
-    k2 = np.ones((dim2,dim2),np.uint8)
+    k1 = np.ones((dim1,dim1), np.uint8)
+    k2 = np.ones((dim2,dim2), np.uint8)
     dilation = cv2.dilate(img, k1, iterations=1)
     erosion = cv2.erode(img, k2, iterations=1)
     return dilation - erosion
@@ -185,8 +178,8 @@ if __name__ == '__main__':
     if min_size > 1:
         min_size = 1
     elif min_size < 0:
-        min_size = 0.00001
-    print(min_size)
+        min_size = 0
+    #print(min_size)
 
     original_name = "./public/uploads/original_{}.png".format(filename.split('.')[0])
     segmented_name = "./public/uploads/segmented_{}.png".format(filename.split('.')[0])
@@ -205,9 +198,9 @@ if __name__ == '__main__':
     print("Retrieving the image")
     raw = cv2.imread("./public/uploads/{}".format(filename))
     cv2.imwrite(original_name, raw)
-    algo = srm()
+    srm_algo = srm()
     #print(raw.shape)
-    segmented = algo.execute(raw,q,max_regions,min_size)
+    segmented = srm_algo.run(raw,q, max_regions, min_size)
     #print(segmented.shape)
     print("Storing the segmented images")
     cv2.imwrite(segmented_name, segmented)
